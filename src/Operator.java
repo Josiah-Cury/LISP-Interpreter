@@ -1,44 +1,59 @@
-public enum Operator {
-    LPAREN(3, "("),
-    RPAREN(3, ")"),
-    EXPONENT(2, "^"),
-    MULTIPLY(1, "*"),
-    DIVIDE(1, "/"),
-    MODULO(1, "%"),
-    ADD(0, "+"),
-    SUBTRACT(0, "-");
+import java.util.ArrayList;
 
-    private int precedence;
+public enum Operator {
+    LPAREN("arithm", "("),
+    RPAREN("arithm", ")"),
+    EXPONENT("arithm", "^"),
+    MULTIPLY("arithm", "*"),
+    DIVIDE("arithm", "/"),
+    MODULO("arithm", "%"),
+    ADD("arithm", "+"),
+    SUBTRACT("arithm", "-");
+
+    private String type;
     private String symbol;
 
-    Operator(int precedence, String symbol) {
-        this.precedence = precedence;
+    Operator(String type, String symbol) {
+        this.type = type;
         this.symbol = symbol;
     }
 
-    public int getPrecedence() {
-        return this.precedence;
+    public String getType() {
+        return this.type;
     }
 
-    double eval(double a, double b) {
+    public boolean isArithm() { return (this.type.equals("arithm")); }
+
+    public Token arithEval(ArrayList<Double> doubles) {
+        Double answer = doubles.get(0);
+
         switch (this) {
             case ADD:
-                return a + b;
+                for(int i = 1; i < doubles.size(); i++) {
+                    answer += doubles.get(i);
+                }
+                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
+                return new Token(answer);
+
             case SUBTRACT:
-                return a - b;
+                for(int i = 1; i < doubles.size(); i++) {
+                    answer -= doubles.get(i);
+                }
+                return new Token(answer);
+
             case MULTIPLY:
-                return a * b;
+                for(int i = 1; i < doubles.size(); i++) {
+                    answer *= doubles.get(i);
+                }
+                return new Token(answer);
+
             case DIVIDE:
-                return a / b;
-            case EXPONENT:
-                return Math.pow(a, b);
-            case MODULO:
-                return a % b;
-            case LPAREN:
-            case RPAREN:
-                return Double.NaN;
+                for(int i = 1; i < doubles.size(); i++) {
+                    answer /= doubles.get(i);
+                }
+                return new Token(answer);
         }
-        return 0;
+        return null;
     }
 
     @Override

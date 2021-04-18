@@ -6,12 +6,19 @@ public class Token {
     private String string;
     private ArrayList<Token> tokenArrayList;
 
+
+    public ArrayList<Token> getTokenArrayList() { return tokenArrayList; }
+    public void setTokenArrayList(ArrayList<Token> tokenArrayList) { this.tokenArrayList = tokenArrayList; }
+
     public Double getNumber() {
         return number;
     }
+    public void setNumber(Double number) { this.number = number; }
+
     public Operator getOperator() {
         return operator;
     }
+    public void setOperator(Operator operator) { this.operator = operator; }
 
     public String getString() { return string; }
     public void setString(String string) { this.string = string; }
@@ -44,29 +51,10 @@ public class Token {
         this.tokenArrayList = null;
     }
 
-    public boolean isOperator() {
-        if(this.operator != null) { return true; }
-
-        return false;
-    }
-
-    public boolean isNumber() {
-        if(this.number != null) { return true; }
-
-        return false;
-    }
-
-    public boolean isString() {
-        if(this.string != null) { return true; }
-
-        return false;
-    }
-
-    public boolean isTokenArrayList() {
-        if(this.tokenArrayList != null) { return true; }
-
-        return false;
-    }
+    public boolean isOperator() { return this.operator != null; }
+    public boolean isNumber() { return this.number != null; }
+    public boolean isString() { return this.string != null; }
+    public boolean isTokenArrayList() { return this.tokenArrayList != null; }
 
     public static Token parseToken(String token) {
         Token newToken;
@@ -122,19 +110,22 @@ public class Token {
         }
     }
 
-    public String printToken(Token token) {
-        String string = null;
+    public String printToken() {
+        Token token = this;
+        String string = "";
 
         if(token.isNumber()) {
-            string = string + token.number.toString();
+            string = string + token.getNumber().toString() + " ";
         } else if(token.isOperator()) {
-            string = string + token.getOperator().toString();
+            string = string + token.getOperator().toString() + " ";
         } else if(token.isString()) {
-            string = string + token.getString();
+            string = string + token.getString() + " ";
         } else {
+            string = string + "[ ";
             for(Token toke : tokenArrayList) {
-                printToken(toke);
+                string = string + toke.printToken();
             }
+            string = string + "] ";
         }
 
         return string;

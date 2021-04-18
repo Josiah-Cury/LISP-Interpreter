@@ -1,6 +1,3 @@
-import de.tudresden.inf.lat.jsexp.Sexp;
-import de.tudresden.inf.lat.jsexp.SexpFactory;
-
 import java.util.Scanner;
 
 public class Interpreter {
@@ -17,10 +14,16 @@ public class Interpreter {
             System.out.print(">");
 
             input = userInput.nextLine();
+
+
             //System.out.println(input);
             Parser parser = new Parser(input);
-            parser.printParsedString();
+            //parser.printParsedString();
+
+            //System.out.println(parser.getTokenList().printToken());
+
             executor = new Executioner(parser.getTokenList());
+            executor.eval().printToken();
             System.out.println();
 
         } while (!input.equals("(quit)"));
