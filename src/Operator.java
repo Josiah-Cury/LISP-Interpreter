@@ -25,6 +25,19 @@ public enum Operator {
     public boolean isArithm() { return (this.type.equals("arithm")); }
 
     public Token arithEval(ArrayList<Double> doubles) {
+
+        //check is doubles is empty
+        if(doubles.isEmpty()){
+            System.out.print("Arithmetic Operator needs at least one argument!");
+            return new Token();
+        }
+
+        for(Double doub: doubles) {
+            if(doub == null) {
+                return new Token();
+            }
+        }
+
         Double answer = doubles.get(0);
 
         switch (this) {

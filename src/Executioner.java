@@ -30,21 +30,27 @@ public class Executioner {
 
         for (int i = 0; i < stack.size(); i++) {
             if (stack.get(i).isTokenArrayList()){
-                stack.set(i,
-
-                        eval());
+                stack.set(i, new Executioner(stack.get(i)).eval());
             }
         }
 
         //printStack();
 
-        if(stack.get(0).getOperator().isArithm()) {
+        if(stack.isEmpty()){
+            return new Token();
+        }
+
+        if(stack.get(0).isNumber() || stack.get(0).isString()) {
+            String error = stack.get(0).printToken();
+            System.out.print(error + "is not a valid function name!");
+            return new Token();
+        } else if(stack.get(0).getOperator().isArithm()) {
             ArrayList<Double> doublesList = new ArrayList<>();
             for(int i = 1; i < stack.size(); i++) {
                 doublesList.add(stack.get(i).getNumber());
             }
             Token token = stack.get(0).getOperator().arithEval(doublesList);
-            System.out.println(token.printToken());
+            //System.out.println(token.printToken());
             return token;
         }
 

@@ -23,6 +23,13 @@ public class Token {
     public String getString() { return string; }
     public void setString(String string) { this.string = string; }
 
+    public Token() {
+        this.number = null;
+        this.operator = null;
+        this.string = null;
+        this.tokenArrayList = null;
+    }
+
     public Token(double number) {
         this.number = number;
         this.operator = null;
@@ -55,6 +62,13 @@ public class Token {
     public boolean isNumber() { return this.number != null; }
     public boolean isString() { return this.string != null; }
     public boolean isTokenArrayList() { return this.tokenArrayList != null; }
+    public boolean isNull() {
+        boolean nullNumber = this.number == null;
+        boolean nullOperator = this.operator == null;
+        boolean nullString = this.string == null;
+        boolean nullTokenArrayList = this.tokenArrayList == null;;
+        return (nullNumber || nullOperator || nullString || nullTokenArrayList);
+    }
 
     public static Token parseToken(String token) {
         Token newToken;
@@ -83,7 +97,7 @@ public class Token {
 
         if (stringList.size() == 0) {
             System.out.println("unexpected EOF");
-            return null;
+            return new Token();
         }
 
         token = stringList.get(0);
@@ -95,14 +109,19 @@ public class Token {
                 tokens.add(parseTokenList(stringList));
             }
 
+            if(tokens.isEmpty()){
+                System.out.print("NIL");
+                return new Token();
+            }
+
             stringList.remove(0);
             finishedTokenList = new Token(tokens);
             return finishedTokenList;
 
         } else if (token.equals(")")) {
 
-            System.out.println("unexpected )");
-            return null;
+            System.out.print("unexpected )");
+            return new Token();
 
         } else {
 
@@ -120,12 +139,12 @@ public class Token {
             string = string + token.getOperator().toString() + " ";
         } else if(token.isString()) {
             string = string + token.getString() + " ";
-        } else {
-            string = string + "[ ";
+        } else if(token.isTokenArrayList()){
+            string = string + "( ";
             for(Token toke : tokenArrayList) {
                 string = string + toke.printToken();
             }
-            string = string + "] ";
+            string = string + ") ";
         }
 
         return string;
