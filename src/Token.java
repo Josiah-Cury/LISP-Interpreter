@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Token {
     private Double number;
     private Operator operator;
     private String string;
     private ArrayList<Token> tokenArrayList;
+    private Boolean bool;
 
 
     public ArrayList<Token> getTokenArrayList() { return tokenArrayList; }
@@ -23,11 +25,17 @@ public class Token {
     public String getString() { return string; }
     public void setString(String string) { this.string = string; }
 
+    public Boolean getBool() { return bool; }
+    public void setBool(Boolean bool) { this.bool = bool; }
+
+
+
     public Token() {
         this.number = null;
         this.operator = null;
         this.string = null;
         this.tokenArrayList = null;
+        this.bool = null;
     }
 
     public Token(double number) {
@@ -35,6 +43,7 @@ public class Token {
         this.operator = null;
         this.string = null;
         this.tokenArrayList = null;
+        this.bool = null;
     }
 
     public Token(Operator operator) {
@@ -42,6 +51,7 @@ public class Token {
         this.operator = operator;
         this.string = null;
         this.tokenArrayList = null;
+        this.bool = null;
     }
 
     public Token(ArrayList<Token> tokenArray) {
@@ -49,6 +59,7 @@ public class Token {
         this.operator = null;
         this.string = null;
         this.tokenArrayList = tokenArray;
+        this.bool = null;
     }
 
     public Token(String string) {
@@ -56,12 +67,23 @@ public class Token {
         this.operator = null;
         this.string = string;
         this.tokenArrayList = null;
+        this.bool = null;
+    }
+
+    public Token(Boolean bool) {
+        this.number = null;
+        this.operator = null;
+        this.string = null;
+        this.tokenArrayList = null;
+        this.bool = bool;
     }
 
     public boolean isOperator() { return this.operator != null; }
     public boolean isNumber() { return this.number != null; }
     public boolean isString() { return this.string != null; }
     public boolean isTokenArrayList() { return this.tokenArrayList != null; }
+    public boolean isBoolean() { return this.bool != null; }
+
     public boolean isNull() {
         boolean nullNumber = this.number == null;
         boolean nullOperator = this.operator == null;
@@ -78,6 +100,14 @@ public class Token {
                 newToken = new Token(op);
                 return newToken;
             }
+        }
+
+        if(token.equalsIgnoreCase("t")) {
+            newToken = new Token(true);
+            return newToken;
+        } else if (token.equalsIgnoreCase("nil")) {
+            newToken = new Token(false);
+            return newToken;
         }
 
         try {
@@ -145,6 +175,12 @@ public class Token {
                 string = string + toke.printToken();
             }
             string = string + ") ";
+        } else if(token.isBoolean()) {
+            if(token.getBool()) {
+                string = string + "T ";
+            } else {
+                string = string + "NIL ";
+            }
         }
 
         return string;

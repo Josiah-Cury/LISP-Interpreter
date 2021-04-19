@@ -40,7 +40,7 @@ public class Executioner {
             return new Token();
         }
 
-        if(stack.get(0).isNumber() || stack.get(0).isString()) {
+        if(stack.get(0).isNumber() || stack.get(0).isString() || stack.get(0).isBoolean()) {
             String error = stack.get(0).printToken();
             System.out.print(error + "is not a valid function name!");
             return new Token();
@@ -51,6 +51,30 @@ public class Executioner {
             }
             Token token = stack.get(0).getOperator().arithEval(doublesList);
             //System.out.println(token.printToken());
+            return token;
+        } else if(stack.get(0).getOperator().isBool()) {
+            ArrayList<Double> doublesList = new ArrayList<>();
+            for (int i = 1; i < stack.size(); i++) {
+                doublesList.add(stack.get(i).getNumber());
+            }
+            Token token = stack.get(0).getOperator().boolEval(doublesList);
+            //System.out.println(token.printToken());
+            return token;
+        } else if(stack.get(0).getOperator().isMath()) {
+            ArrayList<Double> doublesList = new ArrayList<>();
+            for (int i = 1; i < stack.size(); i++) {
+                doublesList.add(stack.get(i).getNumber());
+            }
+            Token token = stack.get(0).getOperator().evalMath(doublesList);
+
+            return token;
+        } else if(stack.get(0).getOperator().isConditional()) {
+            ArrayList<Token> tokensList = new ArrayList<>();
+            for (int i = 1; i < stack.size(); i++) {
+                tokensList.add(stack.get(i));
+            }
+            Token token = stack.get(0).getOperator().evalIf(tokensList);
+
             return token;
         }
 
