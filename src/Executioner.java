@@ -22,14 +22,21 @@ public class Executioner {
             Work out to the outside and keep working until end of the list.
             Finally, evaluate the outermost ().
          */
+        System.out.println(tokens.printToken());
+        if(tokens.getLiteral()) {
+            return tokens;
+        }
+
         if(tokens.isTokenArrayList()) {
             for (int i = 0; i < tokens.getTokenArrayList().size(); i++) {
+                System.out.println(tokens.getTokenArrayList().get(i).printToken() + tokens.getTokenArrayList().get(i).getLiteral());
                 stack.add(tokens.getTokenArrayList().get(i));
             }
         }
 
         for (int i = 0; i < stack.size(); i++) {
-            if (stack.get(i).isTokenArrayList()){
+            if (stack.get(i).isTokenArrayList() && !stack.get(i).getLiteral()){
+                System.out.println("making new evaluator");
                 stack.set(i, new Executioner(stack.get(i)).eval());
             }
         }
@@ -40,13 +47,19 @@ public class Executioner {
             return new Token();
         }
 
+        //System.out.println(stack.get(0).printToken() + " = this is the first token!!");
+
         if(stack.get(0).isNumber() || stack.get(0).isString() || stack.get(0).isBoolean()) {
             String error = stack.get(0).printToken();
-            System.out.print(error + "is not a valid function name!");
+            System.out.print(error + "is not a valid function name!\n");
             return new Token();
         } else if(stack.get(0).getOperator().isArithm()) {
             ArrayList<Double> doublesList = new ArrayList<>();
             for(int i = 1; i < stack.size(); i++) {
+                /*if(!stack.get(i).isNumber()) {                                        todo: add non-recursive error checking!
+                    System.out.print(stack.get(i).printToken() + "is not a number!");
+                    return new Token();
+                }*/
                 doublesList.add(stack.get(i).getNumber());
             }
             Token token = stack.get(0).getOperator().arithEval(doublesList);
@@ -76,8 +89,14 @@ public class Executioner {
             Token token = stack.get(0).getOperator().evalIf(tokensList);
 
             return token;
+        } else if(stack.get(0).getOperator().isLisp()) {
+            ArrayList<Token> tokensList = new ArrayList<>();
+            for(int i = 1; i < stack.size(); i++) {
+                tokensList.add(stack.get(i));
+            }
+            Token token = stack.get(0).getOperator().evalLisp(tokensList);
+            return token;
         }
-
         return null;
     }
 
@@ -89,7 +108,7 @@ public class Executioner {
     public void printStack() {
         System.out.println("\nThis is a stack----------------");
         for(Token token : this.stack) {
-            System.out.println(token.printToken());
+            System.out.println(token.printToken() + " : " + token.printTokenType());
         }
         System.out.println("------------------------------");
     }

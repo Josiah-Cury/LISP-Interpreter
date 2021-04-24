@@ -31,7 +31,10 @@ public class Parser {
         this.wholeString = string;
         parseString(this.wholeString);
 
-        this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone());
+        this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone(), false);
+        for(Token token: this.tokenList.getTokenArrayList()) {
+            System.out.println(token.printToken() + ": " + token.getLiteral());
+        }
     }
 
 
@@ -41,6 +44,7 @@ public class Parser {
     public void parseString(String string) {
 
         string = string.replace("(", " ( ").replace(")", " ) ");
+        string = string.replace("'", " ' ");
         String[] strings = string.trim().split("\\s+");
 
         for(String i : strings) {

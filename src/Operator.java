@@ -14,13 +14,19 @@ public enum Operator {
     LESSEQ("boolean", "<="),
     GREATER("boolean", ">"),
     GREATEREQ("boolean", ">="),
-    EQ("boolean", "=="),
+    EQ("boolean", "="),
     NOTEQ("boolean", "!="),
 
     SQRT("math", "sqrt"),
     POW("math", "pow"),
 
-    IF("conditional", "if");
+    IF("conditional", "if"),
+    AND("conditional", "and"),
+    OR("conditional", "or"),
+    NOT("conditional", "not"),
+
+    CAR("lisp", "car"),
+    CDR("lisp", "cdr");
 
     private String type;
     private String symbol;
@@ -38,6 +44,7 @@ public enum Operator {
     public boolean isBool() { return (this.type.equals("boolean")); }
     public boolean isMath() { return (this.type.equals("math")); }
     public boolean isConditional() { return (this.type.equals("conditional")); }
+    public boolean isLisp() { return (this.type.equals("lisp")); }
 
     public Token arithEval(ArrayList<Double> doubles) {
 
@@ -155,6 +162,7 @@ public enum Operator {
                 }
                 //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
+
         }
 
         return null;
@@ -199,16 +207,74 @@ public enum Operator {
 
     public Token evalIf(ArrayList<Token> tokens) {
 
-        if(tokens.size() == 3) {
-            if(tokens.get(0).getBool()) {
-                return tokens.get(1);
-            } else {
-                return tokens.get(2);
-            }
-        }
+        switch(this) {
+            case IF:
+                if(tokens.size() == 3) {
+                    if(tokens.get(0).getBool()) {
+                        return tokens.get(1);
+                    } else {
+                        return tokens.get(2);
+                    }
+                }
 
-        System.out.println("IF operator should take in only 3 arguments.");
-        return new Token();
+                System.out.println("IF operator should take in only 3 arguments.");
+                return new Token();
+
+            case AND:
+                if(tokens.size() == 2) {
+                    if(tokens.get(0).getBool() && tokens.get(1).getBool()) {
+                        return new Token(true);
+                    } else {
+                        return new Token(false);
+                    }
+                }
+
+                System.out.println("AND operator should take in only 2 arguments.");
+                return new Token();
+            case OR:
+                if(tokens.size() == 2) {
+                    if(tokens.get(0).getBool() || tokens.get(1).getBool()) {
+                        return new Token(true);
+                    } else {
+                        return new Token(false);
+                    }
+                }
+
+                System.out.println("OR operator should take in only 2 arguments.");
+                return new Token();
+            case NOT:
+                if(tokens.size() == 1) {
+                    if(!tokens.get(0).getBool()) {
+                        return new Token(true);
+                    } else {
+                        return new Token(false);
+                    }
+                }
+
+                System.out.println("NOT operator should take in only 1 argument.");
+                return new Token();
+        }
+        return null;
+
+    }
+
+    public Token evalLisp(ArrayList<Token> tokens) {
+
+        switch(this) {
+            case CAR:
+                //System.out.println("You chose CAR! : " + tokens.get(0).printToken());
+                return tokens.get(0);
+            case CDR:
+                ArrayList<Token> cdrList = new ArrayList<>();
+                for(int i = 1; i < tokens.size(); i++) {
+                    cdrList.add(tokens.get(i));
+                }
+
+                return new Token(cdrList)   ;
+
+        }
+        return null;
+
     }
 
     @Override

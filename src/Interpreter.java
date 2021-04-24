@@ -19,21 +19,30 @@ public class Interpreter {
                 break;
             }
 
-            //System.out.println(input);
-            Parser parser = new Parser(input);
-            //parser.printParsedString();
+            /*if(input.equalsIgnoreCase("t") || input.equalsIgnoreCase("nil")){
+                System.out.println(input.toLowerCase());
+            } else {
 
-            System.out.println(parser.getTokenList().printToken());
+                try {
+                    System.out.println(Integer.parseInt(input));
+                } catch (NumberFormatException e) {*/
+                    //System.out.println(input);
+                    Parser parser = new Parser(input);
+                    //parser.printParsedString();
 
-            executor = new Executioner(parser.getTokenList());
+                    //System.out.println(parser.getTokenList().printToken());
 
-            Token result = executor.eval();
+                    executor = new Executioner(parser.getTokenList());
 
-            System.out.println(result.printToken());
+                    Token result = executor.eval();
 
-            //System.out.println();
+                    System.out.println(result.printToken());
 
-        };
+                    //System.out.println();
+                }
+            //}
+
+        //};
 
         System.out.println("bye");
 

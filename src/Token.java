@@ -7,7 +7,10 @@ public class Token {
     private String string;
     private ArrayList<Token> tokenArrayList;
     private Boolean bool;
+    private Boolean literal = false;
 
+    public Boolean getLiteral() { return literal; }
+    public void setLiteral(Boolean literal) { this.literal = literal; }
 
     public ArrayList<Token> getTokenArrayList() { return tokenArrayList; }
     public void setTokenArrayList(ArrayList<Token> tokenArrayList) { this.tokenArrayList = tokenArrayList; }
@@ -44,6 +47,7 @@ public class Token {
         this.string = null;
         this.tokenArrayList = null;
         this.bool = null;
+        this.literal = true;
     }
 
     public Token(Operator operator) {
@@ -68,6 +72,7 @@ public class Token {
         this.string = string;
         this.tokenArrayList = null;
         this.bool = null;
+        this.literal = true;
     }
 
     public Token(Boolean bool) {
@@ -76,6 +81,7 @@ public class Token {
         this.string = null;
         this.tokenArrayList = null;
         this.bool = bool;
+        this.literal = true;
     }
 
     public boolean isOperator() { return this.operator != null; }
@@ -89,11 +95,19 @@ public class Token {
         boolean nullOperator = this.operator == null;
         boolean nullString = this.string == null;
         boolean nullTokenArrayList = this.tokenArrayList == null;;
-        return (nullNumber || nullOperator || nullString || nullTokenArrayList);
+        return !(nullNumber || nullOperator || nullString || nullTokenArrayList);
     }
 
-    public static Token parseToken(String token) {
+    public static Token parseToken(String token, Boolean lit) {
         Token newToken;
+        Boolean literal = lit;
+
+        /*if(literal) {
+            newToken = new Token(token);
+            newToken.setLiteral(literal);
+            System.out.println(newToken + ": " + newToken.getLiteral());
+            return newToken;
+        }*/
 
         for(Operator op : Operator.values()) {
             if(token.equals(op.toString())) {
@@ -119,11 +133,19 @@ public class Token {
         return newToken;
     }
 
-    public static Token parseTokenList(ArrayList<String> stringList) {
+    /*public static Token parseLiteral(String string) {
+        Token newToken;
+        newToken = new Token(string);
+        return newToken;
+    }*/
+
+    public static Token parseTokenList(ArrayList<String> stringList, Boolean lit) {
 
         Token finishedTokenList;
         ArrayList<Token> tokens = new ArrayList<>();
         String token;
+        Boolean literal = lit;
+        //System.out.println("This is the literal boolean: " + literal);
 
         if (stringList.size() == 0) {
             System.out.println("unexpected EOF");
@@ -133,10 +155,21 @@ public class Token {
         token = stringList.get(0);
         stringList.remove(0);
 
+        if (token.equals("'")) {
+            //System.out.println("Quote!!");
+            token = stringList.get(0);
+            stringList.remove(0);
+            literal = true;
+
+        }
+
         if (token.equals("(")) {
 
             while(!stringList.get(0).equals(")")) {
-                tokens.add(parseTokenList(stringList));
+                Token end = parseTokenList(stringList, literal);
+                //System.out.println("end " + end.printToken() + end.getLiteral());
+                end.setLiteral(literal);
+                tokens.add(end);
             }
 
             if(tokens.isEmpty()){
@@ -146,6 +179,8 @@ public class Token {
 
             stringList.remove(0);
             finishedTokenList = new Token(tokens);
+            finishedTokenList.setLiteral(literal);
+            //System.out.println("finishedTokenTokenParse " + finishedTokenList.printToken() + finishedTokenList.getLiteral());
             return finishedTokenList;
 
         } else if (token.equals(")")) {
@@ -154,8 +189,12 @@ public class Token {
             return new Token();
 
         } else {
-
-            return parseToken(token);
+            //System.out.println("Made it here!!");
+            //System.out.println(literal);
+            Token end = parseToken(token, literal);
+            //System.out.println(end.getLiteral());
+            //System.out.println(end.printToken());
+            return end;
         }
     }
 
@@ -163,16 +202,50 @@ public class Token {
         Token token = this;
         String string = "";
 
+
+
         if(token.isNumber()) {
             string = string + token.getNumber().toString() + " ";
+            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isOperator()) {
             string = string + token.getOperator().toString() + " ";
+            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isString()) {
             string = string + token.getString() + " ";
+            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isTokenArrayList()){
             string = string + "( ";
             for(Token toke : tokenArrayList) {
                 string = string + toke.printToken();
+            }
+            string = string + ") ";
+        } else if(token.isBoolean()) {
+            if(token.getBool()) {
+                string = string + "T ";
+            } else {
+                string = string + "NIL ";
+            }
+        }
+
+        return string;
+    }
+
+    public String printTokenType() {
+        Token token = this;
+        String string = "";
+
+        //System.out.println("(Literal value: " + this.getLiteral() + ")");
+
+        if(token.isNumber()) {
+            string = string + "Number ";
+        } else if(token.isOperator()) {
+            string = string + "Operator ";
+        } else if(token.isString()) {
+            string = string + "String ";
+        } else if(token.isTokenArrayList()){
+            string = string + "( ";
+            for(Token toke : tokenArrayList) {
+                string = string + toke.printTokenType();
             }
             string = string + ") ";
         } else if(token.isBoolean()) {
