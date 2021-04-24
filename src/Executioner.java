@@ -22,21 +22,21 @@ public class Executioner {
             Work out to the outside and keep working until end of the list.
             Finally, evaluate the outermost ().
          */
-        System.out.println(tokens.printToken());
+        //System.out.println(tokens.printToken());
         if(tokens.getLiteral()) {
             return tokens;
         }
 
         if(tokens.isTokenArrayList()) {
             for (int i = 0; i < tokens.getTokenArrayList().size(); i++) {
-                System.out.println(tokens.getTokenArrayList().get(i).printToken() + tokens.getTokenArrayList().get(i).getLiteral());
+                //System.out.println(tokens.getTokenArrayList().get(i).printToken() + tokens.getTokenArrayList().get(i).getLiteral());
                 stack.add(tokens.getTokenArrayList().get(i));
             }
         }
 
         for (int i = 0; i < stack.size(); i++) {
             if (stack.get(i).isTokenArrayList() && !stack.get(i).getLiteral()){
-                System.out.println("making new evaluator");
+                //System.out.println("making new evaluator");
                 stack.set(i, new Executioner(stack.get(i)).eval());
             }
         }
@@ -91,8 +91,8 @@ public class Executioner {
             return token;
         } else if(stack.get(0).getOperator().isLisp()) {
             ArrayList<Token> tokensList = new ArrayList<>();
-            for(int i = 1; i < stack.size(); i++) {
-                tokensList.add(stack.get(i));
+            for(int i = 0; i < stack.get(1).getTokenArrayList().size(); i++) {
+                tokensList.add(stack.get(1).getTokenArrayList().get(i));
             }
             Token token = stack.get(0).getOperator().evalLisp(tokensList);
             return token;

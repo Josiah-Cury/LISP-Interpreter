@@ -31,10 +31,10 @@ public class Parser {
         this.wholeString = string;
         parseString(this.wholeString);
 
-        this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone(), false);
-        for(Token token: this.tokenList.getTokenArrayList()) {
+        this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone());
+        /*for(Token token: this.tokenList.getTokenArrayList()) {
             System.out.println(token.printToken() + ": " + token.getLiteral());
-        }
+        }*/
     }
 
 

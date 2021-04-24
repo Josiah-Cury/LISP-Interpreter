@@ -98,9 +98,8 @@ public class Token {
         return !(nullNumber || nullOperator || nullString || nullTokenArrayList);
     }
 
-    public static Token parseToken(String token, Boolean lit) {
+    public static Token parseToken(String token) {
         Token newToken;
-        Boolean literal = lit;
 
         /*if(literal) {
             newToken = new Token(token);
@@ -133,18 +132,23 @@ public class Token {
         return newToken;
     }
 
+    public static Token parseLiteralToken(String token) {
+        Token newToken;
+        newToken = new Token(token);
+        return newToken;
+    }
+
     /*public static Token parseLiteral(String string) {
         Token newToken;
         newToken = new Token(string);
         return newToken;
     }*/
 
-    public static Token parseTokenList(ArrayList<String> stringList, Boolean lit) {
+    public static Token parseTokenList(ArrayList<String> stringList) {
 
         Token finishedTokenList;
         ArrayList<Token> tokens = new ArrayList<>();
         String token;
-        Boolean literal = lit;
         //System.out.println("This is the literal boolean: " + literal);
 
         if (stringList.size() == 0) {
@@ -156,19 +160,17 @@ public class Token {
         stringList.remove(0);
 
         if (token.equals("'")) {
-            //System.out.println("Quote!!");
-            token = stringList.get(0);
-            stringList.remove(0);
-            literal = true;
-
+            System.out.println("Quote!!");
+            finishedTokenList = parseLiteralTokenList(stringList);
+            return finishedTokenList;
         }
 
         if (token.equals("(")) {
 
             while(!stringList.get(0).equals(")")) {
-                Token end = parseTokenList(stringList, literal);
+                Token end = parseTokenList(stringList);
                 //System.out.println("end " + end.printToken() + end.getLiteral());
-                end.setLiteral(literal);
+                //end.setLiteral(literal);
                 tokens.add(end);
             }
 
@@ -179,7 +181,7 @@ public class Token {
 
             stringList.remove(0);
             finishedTokenList = new Token(tokens);
-            finishedTokenList.setLiteral(literal);
+            //finishedTokenList.setLiteral(literal);
             //System.out.println("finishedTokenTokenParse " + finishedTokenList.printToken() + finishedTokenList.getLiteral());
             return finishedTokenList;
 
@@ -191,7 +193,57 @@ public class Token {
         } else {
             //System.out.println("Made it here!!");
             //System.out.println(literal);
-            Token end = parseToken(token, literal);
+            Token end = parseToken(token);
+            //System.out.println(end.getLiteral());
+            //System.out.println(end.printToken());
+            return end;
+        }
+    }
+
+    public static Token parseLiteralTokenList(ArrayList<String> stringList) {
+
+        Token finishedTokenList;
+        ArrayList<Token> tokens = new ArrayList<>();
+        String token;
+        //System.out.println("This is the literal boolean: " + literal);
+
+        if (stringList.size() == 0) {
+            System.out.println("unexpected EOF");
+            return new Token();
+        }
+
+        token = stringList.get(0);
+        stringList.remove(0);
+
+        if (token.equals("(")) {
+
+            while(!stringList.get(0).equals(")")) {
+                Token end = parseLiteralTokenList(stringList);
+                //System.out.println("end " + end.printToken() + end.getLiteral());
+                //end.setLiteral(literal);
+                tokens.add(end);
+            }
+
+            if(tokens.isEmpty()){
+                System.out.print("NIL");
+                return new Token();
+            }
+
+            stringList.remove(0);
+            finishedTokenList = new Token(tokens);
+            finishedTokenList.setLiteral(true);
+            //System.out.println("finishedTokenTokenParse " + finishedTokenList.printToken() + finishedTokenList.getLiteral());
+            return finishedTokenList;
+
+        } else if (token.equals(")")) {
+
+            System.out.print("unexpected )");
+            return new Token();
+
+        } else {
+            //System.out.println("Made it here!!");
+            //System.out.println(literal);
+            Token end = parseLiteralToken(token);
             //System.out.println(end.getLiteral());
             //System.out.println(end.printToken());
             return end;

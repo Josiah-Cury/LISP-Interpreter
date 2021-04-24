@@ -262,7 +262,7 @@ public enum Operator {
 
         switch(this) {
             case CAR:
-                //System.out.println("You chose CAR! : " + tokens.get(0).printToken());
+                System.out.println("You chose CAR! : " + tokens.get(0).printToken());
                 return tokens.get(0);
             case CDR:
                 ArrayList<Token> cdrList = new ArrayList<>();
