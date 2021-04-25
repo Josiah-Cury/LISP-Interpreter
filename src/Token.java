@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- *
+ * Token contains a number, an operator, a string, a boolean, or an arraylist of tokens.
+ * Token is basically an abstract syntax tree, which contains nested expressions.
  */
 public class Token {
     private Double number;
@@ -98,9 +99,10 @@ public class Token {
     }
 
     /**
+     * Takes in a single string that represents a token. Convert the string into the appropriate token.
      *
-     * @param token
-     * @return
+     * @param token a single string that represents a token.
+     * @return a single token that is either a number, operator, string, or boolean token.
      */
     public static Token parseToken(String token) {
         Token newToken;
@@ -130,9 +132,10 @@ public class Token {
     }
 
     /**
+     * Takes in a single string that represents a token. Convert the string into only a string token.
      *
-     * @param token
-     * @return
+     * @param token a single string that represents a token.
+     * @return a single string token.
      */
     public static Token parseLiteralToken(String token) {
         Token newToken;
@@ -141,9 +144,12 @@ public class Token {
     }
 
     /**
+     * Takes in a list of strings that represent user input. If it is valid, the parseTokenList will create
+     *  a list tokens for each string in the stringList. If it is only a single string in the arraylist, then
+     *  just create a single token. This will represent a stack, or an abstract syntax tree.
      *
-     * @param stringList
-     * @return
+     * @param stringList The list of strings that represent the tokens to be created!
+     * @return A token, that may or may not nest other tokens, that represents the user input.
      */
     public static Token parseTokenList(ArrayList<String> stringList) {
 
@@ -160,6 +166,7 @@ public class Token {
         stringList.remove(0);
 
         if (token.equals("'")) {
+
             finishedTokenList = parseLiteralTokenList(stringList);
             return finishedTokenList;
         }
@@ -196,9 +203,12 @@ public class Token {
     }
 
     /**
+     * Takes in a list of strings that represent user input. If it is valid, the parseLiteralTokenList will create
+     *  a list string tokens for each string in the stringList. If it is only a single string in the arraylist, then
+     *  just create a single token. This will represent a stack, or an abstract syntax tree.
      *
-     * @param stringList
-     * @return
+     * @param stringList The list of strings that represent the tokens to be created!
+     * @return A token that represents the user input.
      */
     public static Token parseLiteralTokenList(ArrayList<String> stringList) {
 
@@ -239,17 +249,29 @@ public class Token {
         } else {
 
             Token end = parseLiteralToken(token);
-
             return end;
         }
     }
 
     /**
-     * @return
+     * This will recursively return the string that makes a token. If a token is a list of other tokens, then
+     * each token in the list will print.
+     *
+     * @return The string that represents the Token.
      */
     public String printToken() {
         Token token = this;
         String string = "";
+
+        if(this.number != null) {
+            double num = this.number;
+            Integer int_num = (int) num;
+
+            if(num % int_num == 0) {
+                string += int_num + " ";
+                return string;
+            }
+        }
 
         if(token.isNumber()) {
             string = string + token.getNumber().toString() + " ";
@@ -275,8 +297,8 @@ public class Token {
     }
 
     /**
-     *
-     * @return
+     * Prints out the token type as a string.
+     * @return a string that is the token type.
      */
     public String printTokenType() {
         Token token = this;

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
+ * Predefined operators that perform certain operations. Each operator has a type and a symbol.
  */
 public enum Operator {
     MULTIPLY("arithm", "*"),
@@ -52,10 +52,11 @@ public enum Operator {
     public boolean isLisp() { return (this.type.equals("lisp")); }
 
     /**
+     * Performs arithmetic operator on the list of doubles.
      *
-     * @param doubles
-     * @return
-     * @throws Exception
+     * @param doubles the list of doubles that the operator performs on
+     * @return a token that contains the answer
+     * @throws Exception if the list is empty or one of the doubles is null, print error message.
      */
     public Token arithEval(ArrayList<Double> doubles) throws Exception {
 
@@ -64,6 +65,7 @@ public enum Operator {
             throw new Exception("Arithmetic Operator needs at least one argument!");
         }
 
+        //This is redundant...
         for(Double doub: doubles) {
             if(doub == null) {
                 throw new Exception("One of the arguments is not a number!");
@@ -105,10 +107,11 @@ public enum Operator {
     }
 
     /**
+     * Performs a boolean operator on the list of doubles.
      *
-     * @param doubles
-     * @return
-     * @throws Exception
+     * @param doubles the list of doubles that the operator performs on
+     * @return a token that contains the answer
+     * @throws Exception if the list is empty or one of the doubles is null, print error message.
      */
     public Token boolEval(ArrayList<Double> doubles) throws Exception {
 
@@ -180,10 +183,11 @@ public enum Operator {
     }
 
     /**
+     * Performs math operator on the list of doubles.
      *
-     * @param doubles
-     * @return
-     * @throws Exception
+     * @param doubles the list of doubles that the operator performs on
+     * @return a token that contains the answer
+     * @throws Exception if the list is empty or one of the doubles is null, print error message.
      */
     public Token evalMath(ArrayList<Double> doubles) throws Exception {
 
@@ -220,9 +224,12 @@ public enum Operator {
     }
 
     /**
-     * @param tokens
-     * @return
-     * @throws Exception
+     * Performs if operator on the list of doubles. If the first argument is true, return the second token, otherwise
+     * return the third token.
+     *
+     * @param tokens the list of tokens that the operator performs on
+     * @return a token that contains the answer
+     * @throws Exception if the list is empty or the first argument is not a boolean, print error message.
      */
     public Token evalIf(ArrayList<Token> tokens) throws Exception {
 
@@ -278,9 +285,11 @@ public enum Operator {
     }
 
     /**
-     * @param tokens
-     * @param variables
-     * @return
+     * evalLisp evaluates car, cdr, define, set!, or cons operator.
+     *
+     * @param tokens The list of tokens to perform operations upon.
+     * @param variables The hashmap that saves variables and their numbers.
+     * @return The token that contains the answer to the evaluation
      * @throws Exception
      */
     public Token evalLisp(ArrayList<Token> tokens, HashMap<String, Token> variables) throws Exception {
@@ -307,18 +316,38 @@ public enum Operator {
                 if(tokens.size() == 2) {
                     if(tokens.get(0).isString()){
                         if(!tokens.get(1).isNull()){
-                            variables.put(tokens.get(0).getString(), tokens.get(1));
-                            return tokens.get(1);
+                            if(!variables.containsKey(tokens.get(0).getString())){
+                                variables.put(tokens.get(0).getString(), tokens.get(1));
+                                return tokens.get(1);
+                            }
+                            throw new Exception("This variable name is already defined!!");
                         }
                     }
                 }
                 throw new Exception("Define should take in only two arguments.");
 
+            case SET:
+                if(tokens.size() == 2) {
+                    if(tokens.get(0).isString()){
+                        if(!tokens.get(1).isNull()){
+                            variables.put(tokens.get(0).getString(), tokens.get(1));
+                            return tokens.get(1);
+                        }
+                    }
+                }
+                throw new Exception("Set! should take in only two arguments.");
+
+
         }
+        System.out.println("Umm...");
         return null;
 
     }
 
+    /**
+     * Prints token operator as a string!
+     * @return the string symbol that represents the operator.
+     */
     @Override
     public String toString() {
         return symbol;

@@ -1,0 +1,64 @@
+Welcome to my LISP interpreter! Type in LISP commands.
+
+>(define a '((1 2 3 (4 (5 (6 7))) 8) 9 (10 11) 12 13 (14 15) 16 17 18)))
+The input string does not have balanced parenthesis!
+
+>(define a '((1 2 3 (4 (5 (6 (7))) 8) 9 (10 11) 12 13 (14 15) 16 17 18)))
+( ( 1 2 3 ( 4 ( 5 ( 6 ( 7 ) ) ) 8 ) 9 ( 10 11 ) 12 13 ( 14 15 ) 16 17 18 ) ) 
+
+>(car a)
+( 1 2 3 ( 4 ( 5 ( 6 ( 7 ) ) ) 8 ) 9 ( 10 11 ) 12 13 ( 14 15 ) 16 17 18 ) 
+
+>(car(car a)
+The input string does not have balanced parenthesis!
+
+>(car (car a))
+1 
+
+>(car(cdr(cdr(cdr(car a)))))
+( 4 ( 5 ( 6 ( 7 ) ) ) 8 ) 
+
+>(car (car a)
+The input string does not have balanced parenthesis!
+
+>a
+( ( 1 2 3 ( 4 ( 5 ( 6 ( 7 ) ) ) 8 ) 9 ( 10 11 ) 12 13 ( 14 15 ) 16 17 18 ) ) 
+
+>define a
+
+
+>(define a 2)
+This variable name is already defined!!
+
+>(set! a 2)
+2 
+
+>a
+2 
+
+>(+ a 3)
+5 
+
+>(define b 10)
+10 
+
+>(set! a 5)
+5 
+
+>(+ a b)
+15 
+
+>(- b a)
+5 
+
+>(* b a)
+50 
+
+>(/ b a)
+2 
+
+>(/ 6 0)
+Error: divide by zero
+
+>(quit)
+bye

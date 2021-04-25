@@ -123,6 +123,8 @@ public class Executioner {
                 if(stack.get(i).getNumber() == null){
                     if(variables.containsKey(stack.get(i).getString())){
                         doublesList.add(variables.get(stack.get(i).getString()).getNumber());
+                    } else {
+                        throw new Exception("One of these is not a number!!");
                     }
                 } else {
                     doublesList.add(stack.get(i).getNumber());
@@ -153,7 +155,7 @@ public class Executioner {
             return token;
 
             /**
-             * This if will perform a math operator ().
+             * This if will perform a math operator (sqrt, pow).
              */
         } else if(stack.get(0).getOperator().isMath()) {
 
@@ -173,6 +175,9 @@ public class Executioner {
 
             return token;
 
+            /**
+             * This if will perform a conditional operator (if, and, or, not).
+             */
         } else if(stack.get(0).getOperator().isConditional()) {
 
             ArrayList<Token> tokensList = new ArrayList<>();
@@ -185,9 +190,11 @@ public class Executioner {
 
             return token;
 
+            /**
+             * This if will perform a lisp operator (car, cdr, cons, define, set!).
+             */
         } else if(stack.get(0).getOperator().isLisp()) {
-
-            if(stack.get(0).getOperator().getSymbol().equals("define")) {
+            if(stack.get(0).getOperator().getSymbol().equals("define") || stack.get(0).getOperator().getSymbol().equals("set!")) {
 
                 ArrayList<Token> tokensList = new ArrayList<>();
 

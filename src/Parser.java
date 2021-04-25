@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Parser is used to take in a single string and creates an arraylist of string delimited by white space.
@@ -37,11 +38,15 @@ public class Parser {
      *
      * @param string The user input string that needs to be parsed and converted to tokens.
      */
-    public Parser(String string) {
+    public Parser(String string) throws Exception {
         this.wholeString = string;
         parseString(this.wholeString);
 
-        this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone());
+        if(isValid()) {
+            this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone());
+        } else {
+            throw new Exception("The input string does not have balanced parenthesis!");
+        }
 
     }
 
@@ -73,14 +78,28 @@ public class Parser {
     public void printParsedString() { System.out.println(parsedString); }
 
 
-
-
+    /**
+     * Checks if the user input parenthesis are balanced!
+     * @return true or false depending on if the string is valid
+     */
     public boolean isValid() {
-        return false;
+        int count = 0;
+        for(String token : parsedString){
+            if(token.equals("(")) {
+                count++;
+            } else if (token.equals(")")) {
+                count--;
+            }
+
+            if(count < 0) {
+                return false;
+            }
+        }
+        if(count != 0) {
+            return false;
+        }
+        return true;
     }
-
-
-
 
 
     /*public int findEndExpression(String expression) {
