@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 
+/**
+ * Parser is used to take in a single string and creates an arraylist of string delimited by white space.
+ * The parser will also add white space around parenthesis.
+ */
 public class Parser {
 
     private String wholeString;
     private ArrayList<String> parsedString = new ArrayList<>();
     private Token tokenList;
-
-
-
-
 
     public Token getTokenList() { return tokenList; }
 
@@ -19,28 +19,40 @@ public class Parser {
     public ArrayList<String> getParsedString() { return parsedString; }
 
 
-
-
-
+    /**
+     * Default constructor sets everything to null.
+     */
     public Parser() {
         this.wholeString = null;
         this.parsedString = null;
     }
 
+    /**
+     * Consructor that is most often used. This constructor essentially takes in a single string and creates
+     * a list of tokens that can be evaluated later.
+     *
+     * Parser will take in a single string and parse the string into an arraylist of strings. These strings are then ran
+     * through a method from the Token class, parseTokenList, and creates an arraylist of Tokens. The arraylist of
+     * Tokens are saved in tokenList which can be used for the Executioner class.
+     *
+     * @param string The user input string that needs to be parsed and converted to tokens.
+     */
     public Parser(String string) {
         this.wholeString = string;
         parseString(this.wholeString);
 
         this.tokenList = Token.parseTokenList((ArrayList<String>) parsedString.clone());
-        /*for(Token token: this.tokenList.getTokenArrayList()) {
-            System.out.println(token.printToken() + ": " + token.getLiteral());
-        }*/
+
     }
 
 
-
-
-
+    /**
+     *  The method parseString will take in a string and add spaces around parenthesis and quotes. Then the string
+     *  will be delimited by white space to make an arraylist of strings.
+     *
+     *  Each delimited string will be added to the parser's attribute parsedString, which is an arraylist of strings.
+     * @param string
+     */
     public void parseString(String string) {
 
         string = string.replace("(", " ( ").replace(")", " ) ");
@@ -58,17 +70,12 @@ public class Parser {
 
 
 
-    public void printParsedString() {
-
-        System.out.println(parsedString);
-
-    }
+    public void printParsedString() { System.out.println(parsedString); }
 
 
 
 
     public boolean isValid() {
-
         return false;
     }
 

@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ *
+ */
 public class Token {
     private Double number;
     private Operator operator;
@@ -15,14 +18,10 @@ public class Token {
     public ArrayList<Token> getTokenArrayList() { return tokenArrayList; }
     public void setTokenArrayList(ArrayList<Token> tokenArrayList) { this.tokenArrayList = tokenArrayList; }
 
-    public Double getNumber() {
-        return number;
-    }
+    public Double getNumber() { return number; }
     public void setNumber(Double number) { this.number = number; }
 
-    public Operator getOperator() {
-        return operator;
-    }
+    public Operator getOperator() { return operator; }
     public void setOperator(Operator operator) { this.operator = operator; }
 
     public String getString() { return string; }
@@ -98,15 +97,13 @@ public class Token {
         return !(nullNumber || nullOperator || nullString || nullTokenArrayList);
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
     public static Token parseToken(String token) {
         Token newToken;
-
-        /*if(literal) {
-            newToken = new Token(token);
-            newToken.setLiteral(literal);
-            System.out.println(newToken + ": " + newToken.getLiteral());
-            return newToken;
-        }*/
 
         for(Operator op : Operator.values()) {
             if(token.equals(op.toString())) {
@@ -132,24 +129,27 @@ public class Token {
         return newToken;
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
     public static Token parseLiteralToken(String token) {
         Token newToken;
         newToken = new Token(token);
         return newToken;
     }
 
-    /*public static Token parseLiteral(String string) {
-        Token newToken;
-        newToken = new Token(string);
-        return newToken;
-    }*/
-
+    /**
+     *
+     * @param stringList
+     * @return
+     */
     public static Token parseTokenList(ArrayList<String> stringList) {
 
         Token finishedTokenList;
         ArrayList<Token> tokens = new ArrayList<>();
         String token;
-        //System.out.println("This is the literal boolean: " + literal);
 
         if (stringList.size() == 0) {
             System.out.println("unexpected EOF");
@@ -160,7 +160,6 @@ public class Token {
         stringList.remove(0);
 
         if (token.equals("'")) {
-            System.out.println("Quote!!");
             finishedTokenList = parseLiteralTokenList(stringList);
             return finishedTokenList;
         }
@@ -169,8 +168,7 @@ public class Token {
 
             while(!stringList.get(0).equals(")")) {
                 Token end = parseTokenList(stringList);
-                //System.out.println("end " + end.printToken() + end.getLiteral());
-                //end.setLiteral(literal);
+
                 tokens.add(end);
             }
 
@@ -181,8 +179,7 @@ public class Token {
 
             stringList.remove(0);
             finishedTokenList = new Token(tokens);
-            //finishedTokenList.setLiteral(literal);
-            //System.out.println("finishedTokenTokenParse " + finishedTokenList.printToken() + finishedTokenList.getLiteral());
+
             return finishedTokenList;
 
         } else if (token.equals(")")) {
@@ -191,21 +188,23 @@ public class Token {
             return new Token();
 
         } else {
-            //System.out.println("Made it here!!");
-            //System.out.println(literal);
+
             Token end = parseToken(token);
-            //System.out.println(end.getLiteral());
-            //System.out.println(end.printToken());
+
             return end;
         }
     }
 
+    /**
+     *
+     * @param stringList
+     * @return
+     */
     public static Token parseLiteralTokenList(ArrayList<String> stringList) {
 
         Token finishedTokenList;
         ArrayList<Token> tokens = new ArrayList<>();
         String token;
-        //System.out.println("This is the literal boolean: " + literal);
 
         if (stringList.size() == 0) {
             System.out.println("unexpected EOF");
@@ -219,8 +218,6 @@ public class Token {
 
             while(!stringList.get(0).equals(")")) {
                 Token end = parseLiteralTokenList(stringList);
-                //System.out.println("end " + end.printToken() + end.getLiteral());
-                //end.setLiteral(literal);
                 tokens.add(end);
             }
 
@@ -232,7 +229,6 @@ public class Token {
             stringList.remove(0);
             finishedTokenList = new Token(tokens);
             finishedTokenList.setLiteral(true);
-            //System.out.println("finishedTokenTokenParse " + finishedTokenList.printToken() + finishedTokenList.getLiteral());
             return finishedTokenList;
 
         } else if (token.equals(")")) {
@@ -241,30 +237,26 @@ public class Token {
             return new Token();
 
         } else {
-            //System.out.println("Made it here!!");
-            //System.out.println(literal);
+
             Token end = parseLiteralToken(token);
-            //System.out.println(end.getLiteral());
-            //System.out.println(end.printToken());
+
             return end;
         }
     }
 
+    /**
+     * @return
+     */
     public String printToken() {
         Token token = this;
         String string = "";
 
-
-
         if(token.isNumber()) {
             string = string + token.getNumber().toString() + " ";
-            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isOperator()) {
             string = string + token.getOperator().toString() + " ";
-            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isString()) {
             string = string + token.getString() + " ";
-            //System.out.println( string + "(Literal value: " + this.getLiteral() + ")");
         } else if(token.isTokenArrayList()){
             string = string + "( ";
             for(Token toke : tokenArrayList) {
@@ -282,11 +274,13 @@ public class Token {
         return string;
     }
 
+    /**
+     *
+     * @return
+     */
     public String printTokenType() {
         Token token = this;
         String string = "";
-
-        //System.out.println("(Literal value: " + this.getLiteral() + ")");
 
         if(token.isNumber()) {
             string = string + "Number ";

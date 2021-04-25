@@ -1,12 +1,12 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
+/**
+ *
+ */
 public enum Operator {
-    LPAREN("arithm", "("),
-    RPAREN("arithm", ")"),
-    EXPONENT("arithm", "^"),
     MULTIPLY("arithm", "*"),
     DIVIDE("arithm", "/"),
-    MODULO("arithm", "%"),
     ADD("arithm", "+"),
     SUBTRACT("arithm", "-"),
 
@@ -26,7 +26,11 @@ public enum Operator {
     NOT("conditional", "not"),
 
     CAR("lisp", "car"),
-    CDR("lisp", "cdr");
+    CDR("lisp", "cdr"),
+    CONS("lisp", "cons"),
+    DEFINE("lisp", "define"),
+    SET("lisp", "set!"),
+    DEFUN("lisp", "defun");
 
     private String type;
     private String symbol;
@@ -39,6 +43,7 @@ public enum Operator {
     public String getType() {
         return this.type;
     }
+    public String getSymbol() {return  this.symbol; }
 
     public boolean isArithm() { return (this.type.equals("arithm")); }
     public boolean isBool() { return (this.type.equals("boolean")); }
@@ -46,17 +51,22 @@ public enum Operator {
     public boolean isConditional() { return (this.type.equals("conditional")); }
     public boolean isLisp() { return (this.type.equals("lisp")); }
 
-    public Token arithEval(ArrayList<Double> doubles) {
+    /**
+     *
+     * @param doubles
+     * @return
+     * @throws Exception
+     */
+    public Token arithEval(ArrayList<Double> doubles) throws Exception {
 
-        //check is doubles is empty
+        //check is doubles are empty
         if(doubles.isEmpty()){
-            System.out.print("Arithmetic Operator needs at least one argument!");
-            return new Token();
+            throw new Exception("Arithmetic Operator needs at least one argument!");
         }
 
         for(Double doub: doubles) {
             if(doub == null) {
-                return new Token();
+                throw new Exception("One of the arguments is not a number!");
             }
         }
 
@@ -67,7 +77,6 @@ public enum Operator {
                 for(int i = 1; i < doubles.size(); i++) {
                     answer += doubles.get(i);
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(answer);
 
             case SUBTRACT:
@@ -84,6 +93,9 @@ public enum Operator {
 
             case DIVIDE:
                 for(int i = 1; i < doubles.size(); i++) {
+                    if(doubles.get(i) == 0){
+                        throw new Exception("Error: divide by zero");
+                    }
                     answer /= doubles.get(i);
                 }
                 return new Token(answer);
@@ -92,12 +104,17 @@ public enum Operator {
         return null;
     }
 
-    public Token boolEval(ArrayList<Double> doubles) {
+    /**
+     *
+     * @param doubles
+     * @return
+     * @throws Exception
+     */
+    public Token boolEval(ArrayList<Double> doubles) throws Exception {
 
-        //check is doubles is empty
+        //check is doubles are empty
         if(doubles.isEmpty()){
-            System.out.print("Boolean Operator needs at least one argument!");
-            return new Token();
+            throw new Exception("Boolean Operator needs at least one argument!");
         }
 
         for(Double doub: doubles) {
@@ -115,7 +132,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
             case LESSEQ:
@@ -124,7 +140,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
             case GREATER:
@@ -133,7 +148,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
             case GREATEREQ:
@@ -142,7 +156,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
             case EQ:
@@ -151,7 +164,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
             case NOTEQ:
@@ -160,7 +172,6 @@ public enum Operator {
                         return new Token(false);
                     }
                 }
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(true);
 
         }
@@ -168,11 +179,17 @@ public enum Operator {
         return null;
     }
 
-    public Token evalMath(ArrayList<Double> doubles) {
+    /**
+     *
+     * @param doubles
+     * @return
+     * @throws Exception
+     */
+    public Token evalMath(ArrayList<Double> doubles) throws Exception {
+
         //check is doubles is empty
         if(doubles.isEmpty()){
-            System.out.print("Math Operator needs at least one argument!");
-            return new Token();
+            throw new Exception("Math Operator needs at least one argument!");
         }
 
         for(Double doub: doubles) {
@@ -186,17 +203,14 @@ public enum Operator {
         switch(this) {
             case SQRT:
                 if(doubles.size() != 1) {
-                    System.out.println("SQRT should only take in one argument!");
-                    return new Token();
+                    throw new Exception("SQRT should only take in one argument!");
                 }
                 answer = Math.sqrt(answer);
-                //System.out.println("\nThis is the arraylist of doubles_____________\n" + doubles.toString() + "\n_______________________________\n");
                 return new Token(answer);
 
             case POW:
                 if(doubles.size() != 2) {
-                    System.out.println("POW should take in two arugments!");
-                    return new Token();
+                    throw new Exception("POW should take in two arugments!");
                 }
                 answer = Math.pow(answer, doubles.get(1));
                 return new Token(answer);
@@ -205,10 +219,18 @@ public enum Operator {
         return null;
     }
 
-    public Token evalIf(ArrayList<Token> tokens) {
+    /**
+     * @param tokens
+     * @return
+     * @throws Exception
+     */
+    public Token evalIf(ArrayList<Token> tokens) throws Exception {
 
         switch(this) {
             case IF:
+                if(!tokens.get(0).isBoolean()) {
+                    throw new Exception("The first argument should be a boolean!!");
+                }
                 if(tokens.size() == 3) {
                     if(tokens.get(0).getBool()) {
                         return tokens.get(1);
@@ -217,8 +239,7 @@ public enum Operator {
                     }
                 }
 
-                System.out.println("IF operator should take in only 3 arguments.");
-                return new Token();
+                throw new Exception("IF operator should take in only 3 arguments.");
 
             case AND:
                 if(tokens.size() == 2) {
@@ -229,8 +250,8 @@ public enum Operator {
                     }
                 }
 
-                System.out.println("AND operator should take in only 2 arguments.");
-                return new Token();
+                throw new Exception("AND operator should take in only 2 arguments.");
+
             case OR:
                 if(tokens.size() == 2) {
                     if(tokens.get(0).getBool() || tokens.get(1).getBool()) {
@@ -240,8 +261,7 @@ public enum Operator {
                     }
                 }
 
-                System.out.println("OR operator should take in only 2 arguments.");
-                return new Token();
+                throw new Exception("OR operator should take in only 2 arguments.");
             case NOT:
                 if(tokens.size() == 1) {
                     if(!tokens.get(0).getBool()) {
@@ -251,18 +271,21 @@ public enum Operator {
                     }
                 }
 
-                System.out.println("NOT operator should take in only 1 argument.");
-                return new Token();
+                throw new Exception("NOT operator should take in only 1 argument.");
         }
         return null;
 
     }
 
-    public Token evalLisp(ArrayList<Token> tokens) {
-
+    /**
+     * @param tokens
+     * @param variables
+     * @return
+     * @throws Exception
+     */
+    public Token evalLisp(ArrayList<Token> tokens, HashMap<String, Token> variables) throws Exception {
         switch(this) {
             case CAR:
-                System.out.println("You chose CAR! : " + tokens.get(0).printToken());
                 return tokens.get(0);
             case CDR:
                 ArrayList<Token> cdrList = new ArrayList<>();
@@ -271,6 +294,25 @@ public enum Operator {
                 }
 
                 return new Token(cdrList)   ;
+            case CONS:
+                ArrayList<Token> consList = new ArrayList<>();
+                consList.add(tokens.get(0));
+
+                for(int i = 0; i < tokens.get(1).getTokenArrayList().size(); i++) {
+                    consList.add(tokens.get(1).getTokenArrayList().get(i));
+                }
+                return new Token(consList);
+
+            case DEFINE:
+                if(tokens.size() == 2) {
+                    if(tokens.get(0).isString()){
+                        if(!tokens.get(1).isNull()){
+                            variables.put(tokens.get(0).getString(), tokens.get(1));
+                            return tokens.get(1);
+                        }
+                    }
+                }
+                throw new Exception("Define should take in only two arguments.");
 
         }
         return null;
