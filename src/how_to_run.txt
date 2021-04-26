@@ -1,4 +1,0 @@
-1. go into source folder.
-2. make
-3. java Interpreter
-4. Enjoy!

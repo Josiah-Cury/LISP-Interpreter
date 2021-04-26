@@ -36,7 +36,7 @@ public class Interpreter {
             e.printStackTrace();
         }
 
-        BufferedWriter bufferWriter = new BufferedWriter(new FileWriter("Lisp_Output.txt"));
+        BufferedWriter bufferWriter = new BufferedWriter(new FileWriter("result.file"));
 
         System.out.println("Welcome to my LISP interpreter! Type in LISP commands.");
         bufferWriter.write("Welcome to my LISP interpreter! Type in LISP commands.\n\n");

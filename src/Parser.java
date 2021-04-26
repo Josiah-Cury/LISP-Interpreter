@@ -29,7 +29,7 @@ public class Parser {
     }
 
     /**
-     * Consructor that is most often used. This constructor essentially takes in a single string and creates
+     * Constructor that is most often used. This constructor essentially takes in a single string and creates
      * a list of tokens that can be evaluated later.
      *
      * Parser will take in a single string and parse the string into an arraylist of strings. These strings are then ran
